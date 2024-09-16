@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Equipamentos</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Equipamentos</h1>
+    <!-- Exibe a mensagem de sucesso se existir -->
+    <div th:if="${mensagemSucesso}" class="mensagem-sucesso">
+        <p th:text="${mensagemSucesso}"></p>
+    </div>
+
+    <!-- Adicione um formulário para criar novos equipamentos -->
+    <form action="#" th:action="@{/api/equipamentos}" method="post">
+        <input type="text" name="nomeEquipamento" placeholder="Nome do Equipamento" required/>
+        <input type="text" name="tipoEquipamento" placeholder="Tipo do Equipamento" required/>
+        <input type="text" name="localizacaoEquipamento" placeholder="Localização" required/>
+        <input type="date" name="dataInstalacaoEquipamento" placeholder="Data de Instalação" required/>
+        <input type="text" name="estadoEquipamento" placeholder="Estado" required/>
+        <input type="number" name="empresaId" placeholder="ID da Empresa" required/>
+        <button type="submit">Adicionar Equipamento</button>
+    </form>
+
+    <!-- Lista de equipamentos -->
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Empresa</th>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>Localização</th>
+            <th>Data de Instalação</th>
+            <th>Estado</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="equipamento : ${equipamentos}">
+            <td th:text="${equipamento.idEquipamento}"></td>
+            <td th:text="${equipamento.empresa.nome}"></td>
+            <td th:text="${equipamento.nomeEquipamento}"></td>
+            <td th:text="${equipamento.tipoEquipamento}"></td>
+            <td th:text="${equipamento.localizacaoEquipamento}"></td>
+            <td th:text="${#dates.format(equipamento.dataInstalacaoEquipamento, 'dd/MM/yyyy')}"></td>
+            <td th:text="${equipamento.estadoEquipamento}"></td>
+            <td>
+                <!-- Formulário para deletar um equipamento -->
+                <form action="#" th:action="@{/api/equipamentos/{id}(id=${equipamento.idEquipamento})}" method="post" class="delete-form">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button type="submit" class="btn btn-danger">Deletar</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <a href="/dashboard" class="button">Voltar ao Dashboard</a>
+</div>
+</body>
+</html>

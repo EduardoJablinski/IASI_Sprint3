@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Consumos</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/styles.css">
+    <script>
+        function buscarSomaConsumo(event) {
+            event.preventDefault(); // Evita o comportamento padrão do formulário
+
+            // Obtém o valor do input
+            const nomeEquipamento = document.getElementById('nomeEquipamento').value;
+
+            // Envia a solicitação AJAX
+            fetch(`/api/consumo/soma?nomeEquipamento=${encodeURIComponent(nomeEquipamento)}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Atualiza o elemento com o total de consumo
+                    document.getElementById('totalConsumo').innerText = data;
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    document.getElementById('totalConsumo').innerText = 'Erro ao buscar o total.';
+                });
+        }
+    </script>
+</head>
+<body>
+<h1>Consumos</h1>
+
+<!-- Formulário para buscar o total de consumo pelo nome do equipamento -->
+<form onsubmit="buscarSomaConsumo(event)">
+    <input type="text" id="nomeEquipamento" name="nomeEquipamento" placeholder="Nome do Equipamento" required />
+    <button type="submit">Buscar Soma</button>
+</form>
+
+<!-- Exibir a soma total -->
+<div>
+    <p>Total de Consumo para o Equipamento: <span id="totalConsumo">0</span></p>
+</div>
+
+<!-- Formulário para adicionar um novo consumo -->
+<form action="#" th:action="@{/api/consumo}" method="post">
+    <input type="date" name="dataConsumo" placeholder="Data do Consumo" required />
+    <input type="number" name="quantidadeConsumo" placeholder="Quantidade do Consumo" step="0.01" required />
+    <input type="text" name="tipoEnergiaConsumo" placeholder="Tipo de Energia" required />
+    <input type="number" name="emissaoGasConsumo" placeholder="Emissão de Gás" step="0.01" required />
+    <input type="number" name="equipamentoId" placeholder="ID do Equipamento" required/>
+    <button type="submit">Adicionar Consumo</button>
+</form>
+
+<!-- Lista de consumos -->
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Equipamento</th>
+        <th>Data</th>
+        <th>Quantidade</th>
+        <th>Tipo de Energia</th>
+        <th>Emissão de Gás</th>
+        <th>Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="consumo : ${consumos}">
+        <td th:text="${consumo.idConsumo}"></td>
+        <td th:text="${consumo.equipamento.nomeEquipamento}"></td>
+        <td th:text="${#dates.format(consumo.dataConsumo, 'dd/MM/yyyy')}"></td>
+        <td th:text="${consumo.quantidadeConsumo}"></td>
+        <td th:text="${consumo.tipoEnergiaConsumo}"></td>
+        <td th:text="${consumo.emissaoGasConsumo}"></td>
+
+        <td>
+            <form action="#" th:action="@{/api/consumo/{idConsumo}(idConsumo=${consumo.idConsumo})}" method="post" class="delete-form">
+                <input type="hidden" name="_method" value="delete"/>
+                <button type="submit" class="btn btn-danger">Deletar</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/dashboard" class="button">Voltar ao Dashboard</a>
+</body>
+</html>

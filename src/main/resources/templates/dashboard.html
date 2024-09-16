@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Dashboard</h1>
+    <nav style="text-align: center; margin: 20px 0;">
+        <a href="/dashboard/empresas" class="button" style="display: inline-block; background-color: #4CAF50; color: white; padding: 10px 20px; margin: 5px; border-radius: 5px; text-decoration: none;">Empresas</a>
+        <a href="/dashboard/equipamentos" class="button" style="display: inline-block; background-color: #4CAF50; color: white; padding: 10px 20px; margin: 5px; border-radius: 5px; text-decoration: none;">Equipamentos</a>
+        <a href="/dashboard/consumos" class="button" style="display: inline-block; background-color: #4CAF50; color: white; padding: 10px 20px; margin: 5px; border-radius: 5px; text-decoration: none;">Consumos</a>
+    </nav>
+    <div th:if="${message}" class="message" th:text="${message}"></div>
+</div>
+</body>
+</html>
